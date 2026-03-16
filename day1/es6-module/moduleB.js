@@ -15,3 +15,7 @@ console.log(`半径为5的圆面积 = ${calculateArea(5)}`);
 
 // 调用默认导出的sum函数（自定义名称为add）
 console.log(`10 + 20 = ${add(10, 20)}`);
+
+// moduleB.js 新增
+import { userInfo } from './moduleA.js';
+console.log('用户信息：', userInfo);

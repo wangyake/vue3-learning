@@ -22,8 +22,20 @@
 ## 核心知识点
 1. ES6 模块化：
    - export：命名导出（多个）、默认导出（一个）
+      - 命名导出（export）：
+         - 可以导出多个：export 变量/函数/类 或 export { 变量1, 变量2 }
+         - 导入时必须和导出名称一致：import { 名称 } from '路径'
+      - 默认导出（export default）：
+         - 一个文件只能有一个默认导出
+         - 导入时可以自定义名称：import 任意名称 from '路径'
+      - 路径规则：
+         - 导入本地文件必须写相对路径（./ 表示当前目录）
+         - 可以省略 .js 后缀（比如 import { sayHello } from './moduleA' 也可行）
    - import：按名称导入、默认导入
    - Node.js 运行 ES6 模块需配置 "type": "module"
+   - 路径规则：
+     - 导入本地文件必须写相对路径（./ 表示当前目录）
+     - 可以省略 .js 后缀（比如 import { sayHello } from './moduleA' 也可行）
 
 2. Vue3 项目结构：
    - main.js：入口文件，创建 Vue 实例并挂载

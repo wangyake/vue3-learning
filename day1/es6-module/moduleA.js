@@ -14,3 +14,9 @@ export function calculateArea(radius) {
 export default function sum(a, b) {
   return a + b;
 }
+
+// moduleA.js 新增
+export const userInfo = {
+  name: '张三',
+  age: 20
+};
