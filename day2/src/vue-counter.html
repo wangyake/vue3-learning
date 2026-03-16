@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue3 计数器</title>
+  <!-- 引入Vue3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- 插值表达式展示数字 -->
+    <h2>计数器：{{ count }}</h2>
+    <!-- v-on绑定点击事件 -->
+    <button @click="increment">+1</button>
+    <button @click="decrement">-1</button>
+    <!-- v-bind动态绑定按钮禁用状态（可选扩展） -->
+    <button :disabled="count <= 0" @click="reset">重置</button>
+  </div>
+
+  <script>
+    // Vue3 创建应用实例
+    const { createApp } = Vue;
+
+    createApp({
+      // 数据定义
+      setup() {
+        // 响应式变量
+        const count = Vue.ref(0);
+        
+        // 箭头函数定义事件方法
+        const increment = () => {
+          count.value += 1;
+        };
+        const decrement = () => {
+          count.value -= 1;
+        };
+        const reset = () => {
+          count.value = 0;
+        };
+
+        // 返回模板中需要用到的变量/方法
+        return { count, increment, decrement, reset };
+      }
+    }).mount('#app'); // 挂载到#app容器
+  </script>
+</body>
+</html>
