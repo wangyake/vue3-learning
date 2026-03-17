@@ -14,6 +14,7 @@
     <button @click="increment">+1</button>
     <button @click="decrement">-1</button>
     <!-- v-bind动态绑定按钮禁用状态（可选扩展） -->
+     <!-- :是v-bind的简写。@click是v-on:click的简写。 -->
     <button :disabled="count <= 0" @click="reset">重置</button>
   </div>
 

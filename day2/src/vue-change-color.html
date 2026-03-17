@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue3 变色器</title>
+  <!-- 引入Vue3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- 插值表达式展示数字 -->
+    <h2 :style="{ color: color }">变色：{{ color }}</h2>
+    <!-- v-on绑定点击事件 -->
+    <button @click="changeColor">变色</button>
+  </div>
+
+  <script>
+    // Vue3 创建应用实例
+    const { createApp } = Vue;
+
+    createApp({
+      // 数据定义
+      setup() {
+        // 响应式变量
+        const color = Vue.ref('red');
+        
+        // 箭头函数定义事件方法
+        const changeColor = () => {
+          color.value = color.value === 'red' ? 'blue' : 'red';
+        };
+        
+        // 返回模板中需要用到的变量/方法
+        return { color, changeColor };
+      }
+    }).mount('#app'); // 挂载到#app容器
+  </script>
+</body>
+</html>

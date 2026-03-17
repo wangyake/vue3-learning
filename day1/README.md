@@ -12,10 +12,12 @@
 ### 2. ES6 模块化练习
 - 创建 es6-module 文件夹，编写 moduleA.js（导出函数/变量）、moduleB.js（导入调用）
 - 配置 package.json → "type": "module"
+   - 告诉 Node.js，当前项目中的 .js 文件默认使用「ES 模块（ES6 Module）」规范（即 import/export），而非 Node.js 传统的「CommonJS 模块」规范（即 require/module.exports）
 - 运行：node moduleB.js → 验证输出结果
 
 ### 3. Vue3 项目初始化
 - 命令：npm create vite@latest vue3-first-app -- --template vue
+   这里的 -- 是用来分隔 npm create vite@latest 命令的参数和 Vite 项目模板的参数。表示后面的参数都是 Vite 项目模板的参数，而不是 npm create vite@latest 命令的参数。
 - 安装依赖：npm install
 - 启动项目：npm run dev → 访问 http://127.0.0.1:5173/ 看到页面
 
@@ -30,6 +32,8 @@
          - 导入时可以自定义名称：import 任意名称 from '路径'
       - 路径规则：
          - 导入本地文件必须写相对路径（./ 表示当前目录）
+            上层目录用 ../ 表示
+            项目根目录用 / 表示
          - 可以省略 .js 后缀（比如 import { sayHello } from './moduleA' 也可行）
    - import：按名称导入、默认导入
    - Node.js 运行 ES6 模块需配置 "type": "module"
@@ -41,6 +45,12 @@
    - main.js：入口文件，创建 Vue 实例并挂载
    - App.vue：根组件，包含 template/script/style
    - vite.config.js：Vite 配置文件
+
+3. 工作流程 ：
+   - 浏览器加载 index.html 文件
+   - 浏览器执行 main.js 脚本
+   - main.js 创建 Vue 应用实例并挂载到 #app 元素
+   - Vue 应用开始渲染，将组件内容显示在 #app 元素中
 
 ## 遇到的问题（可选，比如）
 - 问题1：运行 node moduleB.js 报错 → 原因：没配置 package.json 的 "type": "module"
