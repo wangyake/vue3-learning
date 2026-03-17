@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>ES6数组方法练习</title>
+  <style>
+    .container {
+      width: 800px;
+      margin: 20px auto;
+      font-size: 16px;
+    }
+    .result {
+      color: #0066cc;
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>ES6数组方法练习</h2>
+    
+    <h3>1. forEach：遍历数组</h3>
+    <div id="forEachResult" class="result"></div>
+    
+    <h3>2. map：生成新数组（数字×2）</h3>
+    <div id="mapResult" class="result"></div>
+    
+    <h3>3. filter：筛选偶数</h3>
+    <div id="filterResult" class="result"></div>
+  </div>
+
+  <script>
+    // 原始数组
+    const nums = [1, 2, 3, 4, 5, 6, 7, 8];
+    
+    // 1. forEach：遍历数组，打印每个元素（无返回值）
+    const forEachResult = document.getElementById('forEachResult');
+    let forEachStr = '';
+    nums.forEach((item, index) => {
+      forEachStr += `索引${index}：${item} <br>`;
+    });
+    forEachResult.innerHTML = forEachStr;
+    
+    // 2. map：遍历数组，每个数字×2，生成新数组
+    const mapResult = document.getElementById('mapResult');
+    const newNums = nums.map(item => item * 2); // 核心：返回新数组
+    mapResult.innerHTML = `原始数组：${nums} <br>新数组（×2）：${newNums}`;
+    
+    // 3. filter：筛选数组中的偶数
+    const filterResult = document.getElementById('filterResult');
+    const evens = nums.filter(item => item % 2 === 0); // 核心：筛选条件
+    filterResult.innerHTML = `原始数组：${nums} <br>偶数数组：${evens}`;
+    
+    // 【关键提醒】
+    console.log('原数组是否改变：', nums); // [1,2,3,4,5,6,7,8] → 未改变
+  </script>
+</body>
+</html>

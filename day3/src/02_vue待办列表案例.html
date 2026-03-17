@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue3 待办列表</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    .container {
+      width: 500px;
+      margin: 20px auto;
+    }
+    .todo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      border: 1px solid #eee;
+      margin: 8px 0;
+      border-radius: 4px;
+    }
+    .todo-item.done {
+      text-decoration: line-through;
+      color: #999;
+    }
+    button {
+      background: #ff4444;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .filter-btn {
+      background: #0066cc;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <!-- 筛选按钮：v-show控制显隐（高频切换） -->
+    <div>
+      <button class="filter-btn" @click="filterType = 'all'">全部</button>
+      <button class="filter-btn" @click="filterType = 'done'">已完成</button>
+      <button class="filter-btn" @click="filterType = 'undone'">未完成</button>
+    </div>
+
+    <!-- 待办列表：v-for遍历 + key + v-if筛选（先筛选再遍历） -->
+    <div v-for="todo in filteredTodos" :key="todo.id" class="todo-item" :class="{ done: todo.done }">
+      <!-- 条件渲染：已完成则显示√，否则显示× -->
+      <span v-if="todo.done">✅ {{ todo.text }}</span>
+      <span v-else>❌ {{ todo.text }}</span>
+      <!-- 删除按钮：绑定删除方法，传参todo.id -->
+      <button @click="deleteTodo(todo.id)">删除</button>
+    </div>
+
+    <!-- 空列表提示：v-if判断数组长度 -->
+    <div v-if="filteredTodos.length === 0" style="text-align: center; color: #999;">
+      暂无待办事项~
+    </div>
+  </div>
+
+  <script>
+    // Vue3 创建应用实例
+    const { createApp } = Vue;
+
+    createApp({
+      // 数据定义
+      setup() {
+        // 1. 响应式变量：待办列表（模拟初始数据）
+        const todos = Vue.ref([
+          { id: 1, text: '学习ES6数组方法', done: true },
+          { id: 2, text: '掌握v-for和key的用法', done: true },
+          { id: 3, text: '实现待办列表删除功能', done: false },
+          { id: 4, text: '理解v-if和v-show的区别', done: false }
+        ]);
+
+        // 2. 响应式变量：筛选类型（all/done/undone）
+        const filterType = Vue.ref('all');
+
+        // 3. 计算筛选后的列表（核心：结合ES6 filter）
+        // 为什么用计算属性？filterType变化时，filteredTodos会自动更新
+        const filteredTodos = Vue.computed(() => {
+          if (filterType.value === 'done') {
+            // 筛选已完成的待办
+            return todos.value.filter(todo => todo.done);
+          } else if (filterType.value === 'undone') {
+            // 筛选未完成的待办
+            return todos.value.filter(todo => !todo.done);
+          } else {
+            // 显示全部
+            return todos.value;
+          }
+        });
+
+        // 4. 删除待办方法（核心：结合ES6 filter生成新数组）
+        const deleteTodo = (id) => {
+          // filter筛选出不等于当前id的项，生成新数组（不修改原数组）
+          todos.value = todos.value.filter(todo => todo.id !== id);
+        };
+
+        // 5. 返回模板中需要用到的变量/方法
+        return { 
+          todos, 
+          filterType, 
+          filteredTodos, 
+          deleteTodo 
+        };
+      }
+    }).mount('#app'); // 挂载到#app容器
+
+    /**
+     * 核心知识点注释：
+     * 1. v-for的key：用todo.id（唯一且稳定），避免用index
+     * 2. v-if与v-for：通过computed先筛选数组（filteredTodos），再遍历，提升性能
+     * 3. ES6 filter：删除功能用filter生成新数组，而非splice（不修改原数组，符合响应式最佳实践）
+     * 4. v-show：筛选按钮高频切换，用v-show更高效
+     */
+  </script>
+</body>
+</html>
