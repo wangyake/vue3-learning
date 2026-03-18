@@ -1,0 +1,77 @@
+console.log('=== 块级作用域示例 ===');
+
+// var的函数作用域
+function varExample() {
+  if (true) {
+    var x = 10;
+  }
+  console.log('var x:', x); // 10，因为var是函数作用域
+}
+varExample();
+
+// let的块级作用域
+function letExample() {
+  if (true) {
+    let y = 20;
+  }
+  // console.log('let y:', y); // 报错，因为let是块级作用域
+}
+letExample();
+
+// const的块级作用域
+function constExample() {
+  if (true) {
+    const z = 30;
+    console.log('const z:', z); // 30
+  }
+  // console.log('const z:', z); // 报错，因为const是块级作用域
+}
+constExample();
+
+console.log('\n=== 变量提升示例 ===');
+
+// var的变量提升
+console.log('var a before declaration:', a); // undefined，var会被提升
+var a = 100;
+console.log('var a after declaration:', a); // 100
+
+// let的变量提升
+// console.log('let b before declaration:', b); // 报错，let不会被提升
+let b = 200;
+console.log('let b after declaration:', b); // 200
+
+// const的变量提升
+// console.log('const c before declaration:', c); // 报错，const不会被提升
+const c = 300;
+console.log('const c after declaration:', c); // 300
+
+console.log('\n=== const特性示例 ===');
+
+// const声明常量
+const PI = 3.14159;
+console.log('PI:', PI); // 3.14159
+
+// 尝试修改const常量（会报错）
+// PI = 3.14; // 报错：Assignment to constant variable
+
+// const声明对象
+const person = {
+  name: '张三',
+  age: 20
+};
+console.log('person:', person); // { name: '张三', age: 20 }
+
+// 修改const对象的属性（允许）
+person.age = 21;
+console.log('person after age change:', person); // { name: '张三', age: 21 }
+
+// 尝试重新赋值const对象（会报错）
+// person = { name: '李四', age: 25 }; // 报错：Assignment to constant variable
+
+// const声明数组
+const numbers = [1, 2, 3];
+console.log('numbers:', numbers); // [1, 2, 3]
+
+// 修改const数组的内容（允许）
+numbers.push(4);
+console.log('numbers after push:', numbers); // [1, 2, 3, 4]

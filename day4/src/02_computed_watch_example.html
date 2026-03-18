@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>计算属性和侦听器示例</title>
+  <!-- 引入Vue3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>计算属性示例</h2>
+    <p>原始价格: {{ price }} 元</p>
+    <p>折扣: {{ discount }}%</p>
+    <p>折后价格: {{ discountedPrice }} 元</p>
+    <p>折扣节省: {{ savings }} 元</p>
+    
+    <button @click="price += 10">增加价格</button>
+    <button @click="discount += 5">增加折扣</button>
+  </div>
+
+  <div id="app2">
+    <h2>侦听器示例</h2>
+    <input v-model="message" placeholder="输入消息">
+    <p>当前消息: {{ message }}</p>
+    <p>消息长度: {{ messageLength }}</p>
+    <p>上次修改时间: {{ lastUpdated }}</p>
+  </div>
+
+  <script>
+    const { createApp, ref, computed, watch } = Vue;
+
+    // 第一个应用：计算属性示例
+    createApp({
+      setup() {
+        // 响应式数据
+        const price = ref(100);
+        const discount = ref(20);
+        
+        // 计算属性：折后价格
+        const discountedPrice = computed(() => {
+          return price.value * (1 - discount.value / 100);
+        });
+        
+        // 计算属性：节省金额
+        const savings = computed(() => {
+          return price.value - discountedPrice.value;
+        });
+        
+        return {
+          price,
+          discount,
+          discountedPrice,
+          savings
+        };
+      }
+    }).mount('#app');
+
+    // 第二个应用：侦听器示例
+    createApp({
+      setup() {
+        // 响应式数据
+        const message = ref('默认');
+        const lastUpdated = ref(new Date().toLocaleString());
+        
+        // 计算属性：消息长度
+        const messageLength = computed(() => message.value.length);
+        
+        // 侦听器：监听消息变化
+        watch(message, (newValue, oldValue) => {
+          console.log('消息变化:', oldValue, '->', newValue);
+          lastUpdated.value = new Date().toLocaleString();
+        });
+        
+        return {
+          message,
+          messageLength,
+          lastUpdated
+        };
+      }
+    }).mount('#app2');
+  </script>
+</body>
+</html>
