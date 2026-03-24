@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>v-model示例</title>
+  <!-- 引入Vue3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>v-model示例</h2>
+    
+    <!-- 文本输入框 -->
+    <div>
+      <label>用户名：</label>
+      <input type="text" v-model="username">
+      <p>当前用户名：{{ username }}</p>
+    </div>
+    
+    <!-- 文本域 -->
+    <div>
+      <label>个人简介：</label>
+      <textarea v-model="bio" rows="3"></textarea>
+      <p>当前简介：{{ bio }}</p>
+    </div>
+    
+    <!-- 复选框 -->
+    <div>
+      <label>
+        <input type="checkbox" v-model="isAgree"> 我同意协议
+      </label>
+      <p>同意状态：{{ isAgree }}</p>
+    </div>
+    
+    <!-- 单选按钮 -->
+    <div>
+      <label>性别：</label>
+      <label>
+        <input type="radio" v-model="gender" value="male"> 男
+      </label>
+      <label>
+        <input type="radio" v-model="gender" value="female"> 女
+      </label>
+      <p>当前性别：{{ gender }}</p>
+    </div>
+    
+    <!-- 下拉选择框 -->
+    <div>
+      <label>职业：</label>
+      <select v-model="occupation">
+        <option value="">请选择</option>
+        <option value="developer">开发工程师</option>
+        <option value="designer">设计师</option>
+        <option value="teacher">教师</option>
+      </select>
+      <p>当前职业：{{ occupation }}</p>
+    </div>
+    
+    <!-- 多选框 -->
+    <div>
+      <label>兴趣爱好：</label>
+      <label>
+        <input type="checkbox" v-model="hobbies" value="reading"> 阅读
+      </label>
+      <label>
+        <input type="checkbox" v-model="hobbies" value="sports"> 运动
+      </label>
+      <label>
+        <input type="checkbox" v-model="hobbies" value="music"> 音乐
+      </label>
+      <p>当前爱好：{{ hobbies }}</p>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue;
+
+    createApp({
+      setup() {
+        // 响应式数据
+        const username = ref('');
+        const bio = ref('');
+        const isAgree = ref(false);
+        const gender = ref('male');
+        const occupation = ref('');
+        const hobbies = ref([]);
+        
+        return {
+          username,
+          bio,
+          isAgree,
+          gender,
+          occupation,
+          hobbies
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>注册表单</title>
+  <!-- 引入Vue3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    /* 简单样式 */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="password"],
+    .form-group select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      resize: vertical;
+      min-height: 100px;
+    }
+    .form-group .checkbox-group,
+    .form-group .radio-group {
+      display: flex;
+      gap: 15px;
+    }
+    .form-group .checkbox-group label,
+    .form-group .radio-group label {
+      font-weight: normal;
+    }
+    .error {
+      color: #dc3545;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    .success {
+      color: #28a745;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0069d9;
+    }
+    .form-data {
+      margin-top: 30px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #f8f9fa;
+    }
+    .form-data h3 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <h1>注册表单</h1>
+    
+    <!-- 注册表单 -->
+    <form @submit.prevent="submitForm">
+      <!-- 用户名 -->
+      <div class="form-group">
+        <label for="username">用户名</label>
+        <input type="text" id="username" v-model.trim="form.username" placeholder="请输入用户名">
+        <div v-if="errors.username" class="error">{{ errors.username }}</div>
+      </div>
+      
+      <!-- 密码 -->
+      <div class="form-group">
+        <label for="password">密码</label>
+        <input type="password" id="password" v-model="form.password" placeholder="请输入密码">
+        <div v-if="errors.password" class="error">{{ errors.password }}</div>
+      </div>
+      
+      <!-- 确认密码 -->
+      <div class="form-group">
+        <label for="confirmPassword">确认密码</label>
+        <input type="password" id="confirmPassword" v-model="form.confirmPassword" placeholder="请确认密码">
+        <div v-if="errors.confirmPassword" class="error">{{ errors.confirmPassword }}</div>
+      </div>
+      
+      <!-- 性别 -->
+      <div class="form-group">
+        <label>性别</label>
+        <div class="radio-group">
+          <label>
+            <input type="radio" v-model="form.gender" value="male"> 男
+          </label>
+          <label>
+            <input type="radio" v-model="form.gender" value="female"> 女
+          </label>
+        </div>
+      </div>
+      
+      <!-- 兴趣爱好 -->
+      <div class="form-group">
+        <label>兴趣爱好</label>
+        <div class="checkbox-group">
+          <label>
+            <input type="checkbox" v-model="form.hobbies" value="reading"> 阅读
+          </label>
+          <label>
+            <input type="checkbox" v-model="form.hobbies" value="sports"> 运动
+          </label>
+          <label>
+            <input type="checkbox" v-model="form.hobbies" value="music"> 音乐
+          </label>
+          <label>
+            <input type="checkbox" v-model="form.hobbies" value="travel"> 旅行
+          </label>
+        </div>
+      </div>
+      
+      <!-- 职业 -->
+      <div class="form-group">
+        <label for="occupation">职业</label>
+        <select id="occupation" v-model="form.occupation">
+          <option value="">请选择</option>
+          <option value="developer">开发工程师</option>
+          <option value="designer">设计师</option>
+          <option value="teacher">教师</option>
+          <option value="student">学生</option>
+          <option value="other">其他</option>
+        </select>
+      </div>
+      
+      <!-- 同意协议 -->
+      <div class="form-group">
+        <label class="checkbox-group">
+          <input type="checkbox" v-model="form.isAgree"> 我同意用户协议和隐私政策
+        </label>
+        <div v-if="errors.isAgree" class="error">{{ errors.isAgree }}</div>
+      </div>
+      
+      <!-- 提交按钮 -->
+      <button type="submit">注册</button>
+      <div v-if="submitResult" :class="submitResult.success ? 'success' : 'error'">
+        {{ submitResult.message }}
+      </div>
+    </form>
+    
+    <!-- 表单数据预览 -->
+    <div class="form-data">
+      <h3>表单数据预览</h3>
+      <pre>{{ form }}</pre>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref, reactive } = Vue;
+
+    createApp({
+      setup() {
+        // 表单数据
+        const form = reactive({
+          username: '',
+          password: '',
+          confirmPassword: '',
+          gender: 'male',
+          hobbies: [],
+          occupation: '',
+          isAgree: false
+        });
+        
+        // 错误信息
+        const errors = reactive({
+          username: '',
+          password: '',
+          confirmPassword: '',
+          isAgree: ''
+        });
+        
+        // 提交结果
+        const submitResult = ref(null);
+        
+        // 表单验证
+        const validateForm = () => {
+          let isValid = true;
+          
+          // 重置错误信息
+          Object.keys(errors).forEach(key => {
+            errors[key] = '';
+          });
+          
+          // 验证用户名
+          if (!form.username) {
+            errors.username = '用户名不能为空';
+            isValid = false;
+          }
+          
+          // 验证密码
+          if (!form.password) {
+            errors.password = '密码不能为空';
+            isValid = false;
+          } else if (form.password.length < 6) {
+            errors.password = '密码长度不能少于6位';
+            isValid = false;
+          }
+          
+          // 验证确认密码
+          if (form.password !== form.confirmPassword) {
+            errors.confirmPassword = '两次输入的密码不一致';
+            isValid = false;
+          }
+          
+          // 验证同意协议
+          if (!form.isAgree) {
+            errors.isAgree = '请同意用户协议和隐私政策';
+            isValid = false;
+          }
+          
+          return isValid;
+        };
+        
+        // 模拟注册请求
+        const register = () => {
+          return new Promise((resolve, reject) => {
+            // 模拟网络延迟
+            setTimeout(() => {
+              // 模拟注册成功
+              resolve({
+                success: true,
+                message: '注册成功！'
+              });
+              
+              // 模拟注册失败
+              // reject({
+              //   success: false,
+              //   message: '注册失败，请稍后重试'
+              // });
+            }, 1500);
+          });
+        };
+        
+        // 提交表单
+        const submitForm = async () => {
+          // 验证表单
+          if (!validateForm()) {
+            return;
+          }
+          
+          try {
+            // 模拟注册请求
+            const result = await register();
+            submitResult.value = result;
+          } catch (error) {
+            submitResult.value = error;
+          }
+        };
+        
+        return {
+          form,
+          errors,
+          submitResult,
+          submitForm
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
