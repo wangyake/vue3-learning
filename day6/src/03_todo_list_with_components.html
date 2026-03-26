@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>待办列表（带组件）</title>
+  <!-- 引入Vue3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    /* 简单样式 */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    .todo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .todo-item.completed {
+      text-decoration: line-through;
+      color: #999;
+    }
+    .filter-buttons {
+      margin: 20px 0;
+    }
+    .filter-buttons button {
+      margin-right: 10px;
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+      background: #fff;
+      cursor: pointer;
+    }
+    .filter-buttons button.active {
+      background: #007bff;
+      color: #fff;
+      border-color: #007bff;
+    }
+    .delete-btn {
+      background: #dc3545;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    .add-todo {
+      margin: 20px 0;
+      display: flex;
+    }
+    .add-todo input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+    .add-todo button {
+      padding: 10px 20px;
+      background: #28a745;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <h1>待办列表</h1>
+    
+    <!-- 添加待办事项 -->
+    <div class="add-todo">
+      <input v-model="newTodo" placeholder="输入新的待办事项" @keyup.enter="addTodo">
+      <button @click="addTodo">添加</button>
+    </div>
+    
+    <!-- 筛选按钮 -->
+    <div class="filter-buttons">
+      <button 
+        v-for="filter in filters" 
+        :key="filter.value"
+        :class="{ active: currentFilter === filter.value }"
+        @click="currentFilter = filter.value"
+      >
+        {{ filter.label }}
+      </button>
+    </div>
+    
+    <!-- 待办事项列表 -->
+    <ul>
+      <!-- 使用待办项组件 -->
+      <todo-item 
+        v-for="todo in filteredTodos" 
+        :key="todo.id"
+        :todo="todo"
+        @toggle="toggleTodo"
+        @delete="deleteTodo"
+      ></todo-item>
+    </ul>
+    
+    <!-- 空状态提示 -->
+    <div v-if="filteredTodos.length === 0" style="text-align: center; color: #999;">
+      暂无待办事项
+    </div>
+    
+    <!-- 统计信息 -->
+    <div style="margin-top: 20px; font-weight: bold;">
+      共 {{ todos.length }} 项，已完成 {{ completedCount }} 项，未完成 {{ activeCount }} 项
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref, computed } = Vue;
+
+    // 待办项组件
+    const TodoItem = {
+      // 接收props
+      props: ['todo'],
+      // 模板
+      template: `
+        <li :class="{ completed: todo.completed }" class="todo-item">
+          <div>
+            <input 
+              type="checkbox" 
+              :checked="todo.completed" 
+              @change="$emit('toggle', todo.id)"
+            >
+            <span>{{ todo.text }}</span>
+          </div>
+          <button class="delete-btn" @click="$emit('delete', todo.id)">删除</button>
+        </li>
+      `
+    };
+
+    createApp({
+      // 注册组件
+      components: {
+        'todo-item': TodoItem
+      },
+      
+      setup() {
+        // 待办事项数据
+        const todos = ref([
+          { id: 1, text: '学习Vue3组件', completed: true },
+          { id: 2, text: '练习ES6对象简写', completed: false },
+          { id: 3, text: '完成待办列表案例', completed: false }
+        ]);
+        
+        // 新待办事项输入
+        const newTodo = ref('');
+        
+        // 当前筛选状态
+        const currentFilter = ref('all');
+        
+        // 筛选选项
+        const filters = [
+          { label: '全部', value: 'all' },
+          { label: '已完成', value: 'completed' },
+          { label: '未完成', value: 'active' }
+        ];
+        
+        // 计算属性：根据当前筛选状态过滤待办事项
+        const filteredTodos = computed(() => {
+          if (currentFilter.value === 'all') {
+            return todos.value;
+          } else if (currentFilter.value === 'completed') {
+            return todos.value.filter(todo => todo.completed);
+          } else {
+            return todos.value.filter(todo => !todo.completed);
+          }
+        });
+        
+        // 计算属性：已完成的待办事项数量
+        const completedCount = computed(() => {
+          return todos.value.filter(todo => todo.completed).length;
+        });
+        
+        // 计算属性：未完成的待办事项数量
+        const activeCount = computed(() => {
+          return todos.value.filter(todo => !todo.completed).length;
+        });
+        
+        // 添加待办事项方法
+        const addTodo = () => {
+          if (newTodo.value.trim()) {
+            // 生成唯一ID
+            const newId = todos.value.length > 0 
+              ? Math.max(...todos.value.map(todo => todo.id)) + 1 
+              : 1;
+            
+            // 使用ES6对象简写
+            todos.value.push({
+              id: newId,
+              text: newTodo.value.trim(),
+              completed: false
+            });
+            
+            // 清空输入框
+            newTodo.value = '';
+          }
+        };
+        
+        // 切换待办事项完成状态
+        const toggleTodo = (id) => {
+          const todo = todos.value.find(todo => todo.id === id);
+          if (todo) {
+            todo.completed = !todo.completed;
+          }
+        };
+        
+        // 删除待办事项方法
+        const deleteTodo = (id) => {
+          todos.value = todos.value.filter(todo => todo.id !== id);
+        };
+        
+        // 返回模板中需要用到的变量和方法
+        return {
+          todos,
+          newTodo,
+          currentFilter,
+          filters,
+          filteredTodos,
+          completedCount,
+          activeCount,
+          addTodo,
+          toggleTodo,
+          deleteTodo
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

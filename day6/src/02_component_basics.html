@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>组件基础示例</title>
+  <!-- 引入Vue3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>组件基础示例</h2>
+    
+    <!-- 使用全局组件 -->
+    <global-component></global-component>
+    
+    <!-- 使用局部组件 -->
+    <local-component></local-component>
+    
+    <!-- 使用带props的组件 -->
+    <greeting-component name="张三"></greeting-component>
+    <greeting-component name="李四"></greeting-component>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    // 全局注册组件
+    createApp({
+      // 局部组件
+      components: {
+        'local-component': {
+          template: '<div>这是一个局部组件</div>'
+        },
+        'greeting-component': {
+          props: ['name'],
+          template: '<div>你好，{{ name }}！</div>'
+        }
+      }
+    })
+    // 全局注册组件
+    .component('global-component', {
+      template: '<div>这是一个全局组件</div>'
+    })
+    .mount('#app');
+  </script>
+</body>
+</html>
