@@ -1,6 +1,7 @@
 # Vue3 零基础入门 Day6：组件基础 + ES6对象简写
 
 ## 【学习目标】
+
 - 掌握ES6对象简写的语法和使用方法
 - 理解Vue3组件的基本概念
 - 掌握Vue3组件的定义、注册和使用方法
@@ -9,15 +10,18 @@
 ## 【ES6补学：对象简写（20分钟）】
 
 ### 为什么学对象简写
+
 - **代码更简洁**：减少重复代码，提高代码可读性
 - **语法更优雅**：使对象定义更加简洁明了
 - **现代JavaScript标准**：在ES6+项目中广泛使用
 - **与Vue3配合使用**：在组件定义和props传递中经常用到
 
 ### 对象属性简写
+
 **语法**：当对象的属性名与变量名相同时，可以只写属性名，省略冒号和值
 
 **示例**：
+
 ```javascript
 // 传统写法
 const name = 'Vue';
@@ -37,9 +41,11 @@ const obj = {
 ```
 
 ### 对象方法简写
-**语法**：对象的方法可以省略function关键字和冒号
+
+**语法**：对象的方法可以省略function关键字和冒号。裸的函数不能省略。
 
 **示例**：
+
 ```javascript
 // 传统写法
 const obj = {
@@ -61,6 +67,7 @@ const obj = {
 ### 详细示例
 
 #### 基本对象简写
+
 ```javascript
 // src/01_object_shorthand.js
 console.log('=== 基本对象简写 ===');
@@ -96,6 +103,7 @@ es6Obj.greet();
 ```
 
 #### 计算属性名
+
 **语法**：使用方括号 `[]` 来定义动态的属性名
 
 ```javascript
@@ -115,6 +123,7 @@ console.log('计算属性名:', objWithComputedProps);
 ```
 
 #### 结合解构赋值
+
 ```javascript
 // src/01_object_shorthand.js
 console.log('\n=== 结合解构赋值 ===');
@@ -141,6 +150,7 @@ console.log('解构赋值 + 对象简写:', userProfile);
 ```
 
 ### 最佳实践
+
 - **优先使用对象简写**：当属性名与变量名相同时，使用简写形式
 - **方法定义**：使用简写形式定义对象方法
 - **计算属性名**：当属性名需要动态生成时，使用计算属性名语法
@@ -149,9 +159,11 @@ console.log('解构赋值 + 对象简写:', userProfile);
 ## 【Vue3：组件基础（40分钟）】
 
 ### 什么是组件
+
 组件是Vue应用的基本构建块，它允许我们将UI拆分为独立、可复用的部分。
 
 ### 组件的优点
+
 - **代码复用**：将重复的UI和逻辑封装为组件
 - **模块化**：使代码结构更清晰，便于维护
 - **可测试性**：组件可以独立测试
@@ -160,9 +172,11 @@ console.log('解构赋值 + 对象简写:', userProfile);
 ### 组件的定义和注册
 
 #### 全局注册
+
 **语法**：`app.component('组件名', 组件选项)`
 
 **示例**：
+
 ```javascript
 const app = createApp({});
 
@@ -175,9 +189,11 @@ app.mount('#app');
 ```
 
 #### 局部注册
+
 **语法**：在组件的components选项中注册
 
 **示例**：
+
 ```javascript
 const MyComponent = {
   template: '<div>这是一个局部组件</div>'
@@ -191,17 +207,21 @@ createApp({
 ```
 
 ### 组件的使用
+
 **语法**：在模板中使用组件标签
 
 **示例**：
+
 ```html
 <my-component></my-component>
 ```
 
 ### 组件的props
+
 props是组件的输入，允许父组件向子组件传递数据。
 
 **示例**：
+
 ```javascript
 const TodoItem = {
   props: ['todo'],
@@ -213,9 +233,11 @@ const TodoItem = {
 ```
 
 ### 组件的事件
+
 子组件可以通过事件向父组件传递消息。
 
 **示例**：
+
 ```javascript
 const TodoItem = {
   props: ['todo'],
@@ -234,6 +256,7 @@ const TodoItem = {
 ### 详细示例
 
 #### 基本组件示例
+
 ```html
 <!-- src/02_component_basics.html -->
 <!DOCTYPE html>
@@ -288,6 +311,7 @@ const TodoItem = {
 ## 【综合实战：待办项组件】
 
 ### 需求说明
+
 1. 封装一个「待办项组件」（TodoItem）
 2. 组件接收一个todo对象作为prop
 3. 组件支持点击复选框切换完成状态
@@ -295,6 +319,7 @@ const TodoItem = {
 5. 在待办列表中引入使用该组件
 
 ### 完整可运行代码
+
 ```html
 <!-- src/03_todo_list_with_components.html -->
 <!DOCTYPE html>
@@ -533,8 +558,10 @@ const TodoItem = {
 ```
 
 ## 【今日重点总结】
+
 - **ES6对象简写**：当属性名与变量名相同时，可以只写属性名；对象方法可以省略function关键字和冒号
 - **Vue3组件**：组件是Vue应用的基本构建块，允许将UI拆分为独立、可复用的部分
 - **组件注册**：可以全局注册（app.component）或局部注册（components选项）
 - **组件通信**：通过props向子组件传递数据，通过事件向父组件传递消息
 - **综合应用**：封装了待办项组件，实现了组件的定义、注册和使用，以及组件间的通信
+
