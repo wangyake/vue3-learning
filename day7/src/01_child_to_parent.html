@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>子传父通信示例</title>
+  <!-- 引入Vue3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    .child {
+      padding: 20px;
+      border: 1px solid #ddd;
+      margin: 20px 0;
+      background: #f9f9f9;
+    }
+    .parent {
+      padding: 20px;
+      border: 1px solid #007bff;
+      background: #e7f3ff;
+    }
+    button {
+      padding: 10px 20px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <h1>子传父通信示例</h1>
+    
+    <!-- 父组件区域 -->
+    <div class="parent">
+      <h2>父组件</h2>
+      <p>接收到的消息：{{ message }}</p>
+      <p>计数器值：{{ count }}</p>
+      
+      <!-- 使用子组件 -->
+      <child-component 
+        @message="handleMessage"
+        @increment="handleIncrement"
+        @decrement="handleDecrement"
+      ></child-component>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue;
+
+    // 子组件
+    const ChildComponent = {
+      setup(props, { emit }) {
+        // 发送消息
+        const sendMessage = () => {
+          emit('message', 'Hello from child component!');
+        };
+        
+        // 增加计数器
+        const increment = () => {
+          emit('increment');
+        };
+        
+        // 减少计数器
+        const decrement = () => {
+          emit('decrement');
+        };
+        
+        return {
+          sendMessage,
+          increment,
+          decrement
+        };
+      },
+      template: `
+        <div class="child">
+          <h3>子组件</h3>
+          <button @click="sendMessage">发送消息给父组件</button>
+          <div style="margin: 10px 0;">
+            <button @click="increment">+</button>
+            <button @click="decrement">-</button>
+          </div>
+        </div>
+      `
+    };
+
+    createApp({
+      components: {
+        'child-component': ChildComponent
+      },
+      setup() {
+        const message = ref('');
+        const count = ref(0);
+        
+        // 处理子组件发送的消息
+        const handleMessage = (msg) => {
+          message.value = msg;
+        };
+        
+        // 处理增加计数器
+        const handleIncrement = () => {
+          count.value++;
+        };
+        
+        // 处理减少计数器
+        const handleDecrement = () => {
+          count.value--;
+        };
+        
+        return {
+          message,
+          count,
+          handleMessage,
+          handleIncrement,
+          handleDecrement
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

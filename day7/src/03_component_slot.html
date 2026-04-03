@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>组件插槽示例</title>
+  <!-- 引入Vue3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+    .card-header {
+      background: #f8f9fa;
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
+    }
+    .card-body {
+      padding: 15px;
+    }
+    .card-footer {
+      background: #f8f9fa;
+      padding: 15px;
+      border-top: 1px solid #ddd;
+      text-align: right;
+    }
+    .list {
+      list-style: none;
+      padding: 0;
+    }
+    .list-item {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .list-item:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <h1>组件插槽示例</h1>
+    
+    <!-- 默认插槽示例 -->
+    <h2>1. 默认插槽</h2>
+    <card>
+      <p>这是默认插槽的内容，可以插入任意HTML</p>
+      <button @click="showAlert">点击我</button>
+    </card>
+    
+    <!-- 具名插槽示例 -->
+    <h2>2. 具名插槽</h2>
+    <card>
+      <template #header>
+        <h3>自定义卡片标题</h3>
+      </template>
+      <p>这是卡片的主要内容</p>
+      <ul class="list">
+        <li class="list-item">项目1</li>
+        <li class="list-item">项目2</li>
+        <li class="list-item">项目3</li>
+      </ul>
+      <template #footer>
+        <button>确认</button>
+        <button style="margin-left: 10px;">取消</button>
+      </template>
+    </card>
+    
+    <!-- 作用域插槽示例 -->
+    <h2>3. 作用域插槽</h2>
+    <todo-list :items="todos">
+      <template #default="{ item, index }">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span :style="{ textDecoration: item.completed ? 'line-through' : 'none' }">
+            {{ index + 1 }}. {{ item.text }}
+          </span>
+          <button @click="toggleTodo(item.id)">
+            {{ item.completed ? '标记为未完成' : '标记为完成' }}
+          </button>
+        </div>
+      </template>
+    </todo-list>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue;
+
+    // 卡片组件（使用具名插槽）
+    const Card = {
+      template: `
+        <div class="card">
+          <div class="card-header">
+            <slot name="header">默认标题</slot>
+          </div>
+          <div class="card-body">
+            <slot></slot>
+          </div>
+          <div class="card-footer">
+            <slot name="footer">默认 footer</slot>
+          </div>
+        </div>
+      `
+    };
+
+    // 待办列表组件（使用作用域插槽）
+    const TodoList = {
+      props: ['items'],
+      template: `
+        <div class="list">
+          <slot 
+            v-for="item in items" 
+            :key="item.id"
+            :item="item"
+            :index="items.indexOf(item)"
+          ></slot>
+        </div>
+      `
+    };
+
+    createApp({
+      components: {
+        Card,
+        TodoList
+      },
+      setup() {
+        const todos = ref([
+          { id: 1, text: '学习组件插槽', completed: false },
+          { id: 2, text: '练习作用域插槽', completed: true },
+          { id: 3, text: '掌握插槽的各种用法', completed: false }
+        ]);
+        
+        const showAlert = () => {
+          alert('Hello from slot content!');
+        };
+        
+        const toggleTodo = (id) => {
+          const todo = todos.value.find(t => t.id === id);
+          if (todo) {
+            todo.completed = !todo.completed;
+          }
+        };
+        
+        return {
+          todos,
+          showAlert,
+          toggleTodo
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>defineEmits 示例</title>
+  <!-- 引入Vue3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    .item {
+      padding: 10px;
+      border: 1px solid #ddd;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    button {
+      padding: 5px 10px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    .update-btn {
+      background: #ffc107;
+      color: #212529;
+      border: none;
+    }
+    .delete-btn {
+      background: #dc3545;
+      color: #fff;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <h1>defineEmits 示例</h1>
+    
+    <h2>待办事项列表</h2>
+    <div v-if="todos.length === 0">暂无待办事项</div>
+    <div v-else>
+      <todo-item 
+        v-for="todo in todos" 
+        :key="todo.id"
+        :todo="todo"
+        @update="updateTodo"
+        @delete="deleteTodo"
+      ></todo-item>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue;
+
+    // 待办项组件
+    const TodoItem = {
+      props: ['todo'],
+      // 定义组件可以触发的事件
+      emits: ['update', 'delete'],
+      setup(props, { emit }) {
+        // 触发更新事件
+        const handleUpdate = () => {
+          emit('update', props.todo.id);
+        };
+        
+        // 触发删除事件
+        const handleDelete = () => {
+          emit('delete', props.todo.id);
+        };
+        
+        return {
+          handleUpdate,
+          handleDelete
+        };
+      },
+      template: `
+        <div class="item">
+          <span :style="{ textDecoration: todo.completed ? 'line-through' : 'none' }">
+            {{ todo.text }}
+          </span>
+          <div>
+            <button class="update-btn" @click="handleUpdate">
+              {{ todo.completed ? '标记为未完成' : '标记为完成' }}
+            </button>
+            <button class="delete-btn" @click="handleDelete">删除</button>
+          </div>
+        </div>
+      `
+    };
+
+    createApp({
+      components: {
+        'todo-item': TodoItem
+      },
+      setup() {
+        // 待办事项数据
+        const todos = ref([
+          { id: 1, text: '学习 Vue3 组件通信', completed: false },
+          { id: 2, text: '练习 defineEmits', completed: true },
+          { id: 3, text: '掌握组件插槽', completed: false }
+        ]);
+        
+        // 更新待办事项状态
+        const updateTodo = (id) => {
+          const todo = todos.value.find(t => t.id === id);
+          if (todo) {
+            todo.completed = !todo.completed;
+          }
+        };
+        
+        // 删除待办事项
+        const deleteTodo = (id) => {
+          todos.value = todos.value.filter(t => t.id !== id);
+        };
+        
+        return {
+          todos,
+          updateTodo,
+          deleteTodo
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
